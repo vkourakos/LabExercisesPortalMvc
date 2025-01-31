@@ -1,0 +1,49 @@
+﻿@using Ergasia1.Entities
+
+@model List<Contact>
+
+@{
+    ViewData["Title"] = "My Contacts";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>My Contacts</h1>
+    <a class="btn btn-success" asp-controller="Contact" asp-action="AddContact">Add Contact</a>
+</div>
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Full Name</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var contact in Model)
+            {
+                <tr>
+                    <td>@contact.ContactUser.UserName</td>
+                    <td>@contact.ContactUser.FirstName @contact.ContactUser.LastName</td>
+                    <td>
+                        <div class="d-flex gap-2">
+                            <a asp-controller="Message" asp-action="Chat" asp-route-userId="@contact.ContactUser.Id"
+                               class="btn btn-primary btn-sm">Chat</a>
+
+                            <form method="post" asp-controller="Contact" asp-action="RemoveContact">
+                                <input type="hidden" name="contactUserId" value="@contact.ContactUser.Id" />
+                                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>You don't have any contacts yet.</p>
+}

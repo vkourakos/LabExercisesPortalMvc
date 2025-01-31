@@ -1,0 +1,58 @@
+﻿@model List<Ergasia1.Entities.Message>
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<h2>Chat</h2>
+
+<div id="chatContainer">
+    <div id="chatMessages">
+        @foreach (var message in Model)
+        {
+            <p><b>@message.Sender.UserName:</b> @message.Content</p>
+        }
+    </div>
+
+    <div id="chatInput">
+        <input type="text" id="messageInput" class="form-control" placeholder="Type a message...">
+        <button class="btn btn-primary mt-2" onclick="sendMessage()">Send</button>
+    </div>
+</div>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.js" integrity="sha512-FzakzcmrNSXS5+DuuYSO6+5DcUZ417Na0vH1oAIo49mMBA8rHSgkKSjE2ALFOxdQ/kPqF3HZRzb0HQ+AvwXttg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="~/js/chat.js"></script>
+
+<script>
+    var currentUserId = '@User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value';
+    var receiverId = '@ViewBag.UserId';
+    var groupId = '@(ViewBag.GroupId != null ? ViewBag.GroupId : "null")';
+
+    document.addEventListener("DOMContentLoaded", function () {
+        requestNotificationPermission();
+        startSignalR(); 
+    });
+</script>
+
+<style>
+    #chatContainer {
+        display: flex;
+        flex-direction: column;
+        height: 80vh; 
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        overflow: hidden;
+    }
+
+    #chatMessages {
+        flex-grow: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    #chatInput {
+        padding: 10px;
+        border-top: 1px solid #ccc;
+        background: white;
+    }
+</style>

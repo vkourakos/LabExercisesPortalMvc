@@ -1,0 +1,86 @@
+﻿@using Ergasia1.Models.Groups
+@model List<GroupWithMemberStatusVm>
+
+@{
+    ViewData["Title"] = "My Groups";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1>My Groups</h1>
+    <div class="d-flex align-items-center">
+        <a class="btn btn-primary me-2" asp-controller="Group" asp-action="AllGroups">View All Groups</a>
+        <a class="btn btn-success" asp-controller="Group" asp-action="CreateGroup">Create New Group</a>
+    </div>
+</div>
+
+
+@if (Model.Any())
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Group Name</th>
+                <th>Creator</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var groupVM in Model)
+            {
+                <tr>
+                    <td>@groupVM.Group.Name</td>
+                    <td>@groupVM.Group.Creator.FirstName @groupVM.Group.Creator.LastName</td>
+                    <td>
+                        <a asp-controller="Message" asp-action="Chat" asp-route-groupId="@groupVM.Group.Id" class="btn btn-primary">Group Chat</a>
+                        <a asp-controller="Group" asp-action="Details" asp-route-groupId="@groupVM.Group.Id" class="btn btn-info">View</a>
+                        <form method="post" asp-controller="Group" asp-action="LeaveGroup" asp-route-groupId="@groupVM.Group.Id" class="d-inline">
+                            <button type="submit" class="btn btn-warning">Leave</button>
+                        </form>
+
+                        @if (groupVM.IsCreator)
+                        {
+                            <form method="post" asp-controller="Group" asp-action="DeleteGroup" asp-route-groupId="@groupVM.Group.Id" class="d-inline">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center mt-3">
+        <div>
+            Page @ViewBag.CurrentPage of @ViewBag.TotalPages
+        </div>
+        <div>
+            <nav>
+                <ul class="pagination">
+                    @if (ViewBag.CurrentPage > 1)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("MyGroups", new { page = ViewBag.CurrentPage - 1 })">Previous</a>
+                        </li>
+                    }
+                    @for (var i = 1; i <= ViewBag.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("MyGroups", new { page = i })">@i</a>
+                        </li>
+                    }
+                    @if (ViewBag.CurrentPage < ViewBag.TotalPages)
+                    {
+                        <li class="page-item">
+                            <a class="page-link" href="@Url.Action("MyGroups", new { page = ViewBag.CurrentPage + 1 })">Next</a>
+                        </li>
+                    }
+                </ul>
+            </nav>
+        </div>
+    </div>
+}
+else
+{
+    <p>You are not a member of any group yet.</p>
+}
+

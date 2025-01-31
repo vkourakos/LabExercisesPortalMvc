@@ -1,0 +1,28 @@
+﻿@model Ergasia1.Entities.Group
+
+@{
+    ViewData["Title"] = "Group Details";
+}
+
+<h2>@Model.Name</h2>
+
+<p><strong>Created By:</strong> @Model.Creator.UserName</p>
+<p><strong>Description:</strong> @Model.Description</p>
+<p><strong>Created At:</strong> @Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+
+<h3>Members:</h3>
+@if (Model.Members.Any())
+{
+    <ul>
+        @foreach (var member in Model.Members)
+        {
+            <li>@member.UserName</li>
+        }
+    </ul>
+}
+else
+{
+    <p>No members yet.</p>
+}
+
+<a asp-controller="Group" asp-action="MyGroups" class="btn btn-secondary">Back to Groups</a>

@@ -1,0 +1,23 @@
+﻿@model Ergasia1.Entities.Post
+
+@{
+    ViewData["Title"] = "Post Details";
+}
+
+<h2>@Model.Title</h2>
+<p>By <b>@Model.User.UserName</b> on @Model.CreatedAt.ToString("dd/MM/yyyy")</p>
+<p>Category: <span class="badge bg-secondary">@Model.Category</span></p>
+<p>@Model.Content</p>
+
+@if (Model.Tags.Any())
+{
+    <h4>Tags:</h4>
+    <ul>
+        @foreach (var tag in Model.Tags)
+        {
+            <li>@tag.Name</li>
+        }
+    </ul>
+}
+
+<a asp-controller = "Post" asp-action = "List" class="btn btn-secondary">Back to Posts</a>
